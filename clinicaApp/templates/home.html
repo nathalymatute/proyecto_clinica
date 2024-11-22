@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+{% block contenido %}
+<style>
+    .center-content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .parqueos-container {
+        text-align: center;
+    }
+    .skills-section {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .skills-section h2 {
+            font-size: 36px;
+            margin-bottom: 40px;
+        }
+        .skills-section .skill {
+            margin-bottom: 40px;
+        }
+        .skills-section img {
+            width: 100px;
+            height: 100px;
+        }
+        .skills-section p {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+</style>
+<div class="row g-0 text-center m-4">
+    <div class="col-sm-4 col-sm-7 me-5">
+        <div class="container mt-5">
+            <div class="p-3 parqueos-container">
+                <div id="date" style="font-size: 50px;"></div>
+                <div id="clock" style="font-size: 50px;"></div>                            
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="container mt-5">
+            <div class="container mt-5 parqueos-container">
+                <div class="p-2">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-8 text-center d-flex align-items-center justify-content-center">
+                            <h1 class="mb-0">Citas del día</h1>
+                            <div class="spinner-border text-secondary ms-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3" style="position: relative; top: 20%; right: 5%; left: 1%;">
+                        <div style="display: inline-block; text-align: center; margin: 0 5px; font-size: 35px;">
+                            <h4></h4>
+                            <span id="contador-parqueos" class="parqueos-counter">{{ conteo_citas }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="p-5 partcerti" style="background-color: #FFF3E0" id="cursos">
+        <div class="container">
+            <h1 class="text-center p-2 mb-4">Servicios</h1>
+      
+            <!-- Curso 1: Programación en Java II -->
+            <div class="container p-5 mb-5 shadow-lg bg-body rounded">
+                <div>
+                    <h3 class="testimonial-heading"><center>Consulta General</center></h3>
+                    <br>
+                    <a  target="_blank">
+                        <center>
+                            <img src="{% static 'img/consulta.jpg' %}"  width="500px" height="300px">
+                        </center>
+                    </a>
+                    <p class="p-5 parradojava lead text-center lh-base fs-5">
+                        En nuestra clínica, ofrecemos consultas generales con médicos altamente capacitados y comprometidos con tu bienestar. Nuestro equipo de profesionales está preparado para atender una amplia variedad de necesidades de salud, brindando un diagnóstico preciso y un tratamiento adecuado. Además, contamos con un ambiente cómodo y seguro, equipado con tecnología de última generación para ofrecerte la mejor atención médica.
+                    </p>
+                </div>
+            </div>
+      
+            <!-- Curso 2: Bases de Datos con MySQL -->
+            <div class="container p-5 mb-5 shadow-lg bg-body rounded">
+                <div>
+                    <h3 class="testimonial-heading"><center>Cirugias</center></h3>
+                    <br>
+                    <a  target="_blank">
+                        <center>
+                            <center>
+                                <img src="{% static 'img/cirugias.jpg' %}"  width="500px" height="300px">
+                            </center>
+                        </center>
+                    </a>
+                    <p class="p-5 parradojava lead text-center lh-base fs-5">
+                        En nuestra clínica, te ofrecemos una amplia gama de servicios quirúrgicos realizados por médicos especialistas altamente capacitados. Nos comprometemos a brindarte un tratamiento seguro, efectivo y personalizado para cada necesidad quirúrgica, desde procedimientos menores hasta cirugías complejas.
+
+Contamos con un equipo de cirujanos expertos en diversas áreas, utilizando las técnicas más avanzadas y equipos de última generación para garantizar tu salud y recuperación. Nos preocupamos por cada detalle para que tu experiencia sea lo más cómoda y segura posible, tanto antes como después de la cirugía.
+                    </p>
+                </div>
+                
+            </div>
+      
+            <!-- Curso 3: Mantenimiento y reparación de computadoras -->
+            <div class="container p-5 mb-5 shadow-lg bg-body rounded">
+                <div>
+                    <h3 class="testimonial-heading"><center>Neurologos especialistas</center></h3>
+                    <br>
+                    <center>
+                        <img src="{% static 'img/neurologo.jpg' %}"  width="500px" height="300px">
+                    </center>
+                    <p class="p-5 parradojava lead text-center lh-base fs-5">
+                        En nuestra clínica, ofrecemos consultas neurológicas con médicos especialistas en el diagnóstico y tratamiento de enfermedades del sistema nervioso. Nuestro equipo de neurólogos está altamente capacitado para atender una amplia variedad de condiciones, desde trastornos neurológicos comunes hasta patologías más complejas.
+
+Nos enfocamos en ofrecer un diagnóstico preciso y un plan de tratamiento personalizado, utilizando tecnologías avanzadas y técnicas innovadoras para mejorar tu calidad de vida. Ya sea que necesites atención por dolor de cabeza, mareos, problemas de memoria, trastornos del sueño, o enfermedades neurológicas como la epilepsia o el Parkinson, estamos aquí para ayudarte.
+                    </p>
+                </div>
+                
+            </div>
+
+            <div class="container p-5 mb-5 shadow-lg bg-body rounded">
+                <div>
+                    <h3 class="testimonial-heading"><center>Cardiologo especialistas</center></h3>
+                    <br>
+                    <center>
+                        <img src="{% static 'img/cardiologo.png' %}"  width="500px" height="300px">
+                    </center>
+                    <p class="p-5 parradojava lead text-center lh-base fs-5">
+                        En nuestra clínica, te ofrecemos atención cardiológica de primer nivel, con médicos especialistas dedicados a la salud de tu corazón. Nuestro equipo de cardiólogos altamente capacitados está preparado para diagnosticar, tratar y prevenir una amplia variedad de enfermedades cardiovasculares, brindándote soluciones personalizadas y efectivas para cuidar de tu salud.
+
+Realizamos una evaluación integral de tu condición cardiovascular, utilizando las técnicas más avanzadas y equipos de última tecnología para ofrecer un diagnóstico preciso y un tratamiento adecuado. Nos importa tu bienestar, por lo que trabajamos contigo para mantener tu corazón saludable y prevenir futuros problemas.
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+      </section>
+
+{% endblock %}

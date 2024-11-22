@@ -1,0 +1,10 @@
+pip install reportlab
+pip install tablib[pdf,html]
+pip install tablib[yaml] 
+pip install tablib[xls] 
+pip install django-import-export
+python manage.py migrate
+python manage.py makemigrations 
+python manage.py createsuperuser
+python manage.py runserver
+python manage.py runserver 127.0.0.1:8081

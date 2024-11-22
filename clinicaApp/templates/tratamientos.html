@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+{% block subtitulo %}Tratamientos{% endblock %}
+
+<style>
+    .tratamientos-container {
+        text-align: center;
+    }
+    .formulario-container {
+        margin-left: 30%;
+        width: 50%;
+    }
+</style>
+
+{% block contenido %}
+<div class="row g-0 text-center m-4">
+    <div class="col-sm-4 col-sm-7 me-5">
+        <div class="container mt-5">
+            <div class="p-3 tratamientos-container">
+                <div id="date" style="font-size: 50px;"></div>
+                <div id="clock" style="font-size: 50px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="container mt-5">
+            <div class="container mt-5 tratamientos-container">
+                <div class="p-2">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-8 text-center d-flex align-items-center justify-content-center">
+                            <h1 class="mb-0">Tratamientos Registrados</h1>
+                            <div class="spinner-border text-secondary ms-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <div style="display: inline-block; text-align: center; margin: 0 5px; font-size: 35px;">
+                            <h4>Conteo de Tratamientos:</h4>
+                            <span id="contador-tratamientos">{{ conteo_tratamientos }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tabla de Tratamientos -->
+        <div class="col-md-5 formulario-tabla">
+            <h3 class="text-center">Tratamientos Registrados</h3>
+            <form class="d-flex mb-4" onsubmit="buscarTratamiento(event)">
+                <select class="form-select me-2" id="campo_busqueda">
+                    <option value="paciente_nombre" selected>Nombre del Paciente</option>
+                    <option value="nombre_medico">Nombre del Médico</option>
+                </select>
+                <input class="form-control me-2" id="valor_busqueda" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-secondary me-2" type="submit">Buscar</button>
+                <a class="btn btn-primary" href="{% url 'tratamientos' %}">Mostrar Todos</a>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paciente</th>
+                        <th>Médico</th>
+                        <th>Tratamiento</th>
+                        <th>Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tratamiento in tratamientos %}
+                    <tr>
+                        <td>{{ tratamiento.id_tratamiento }}</td>
+                        <td>{{ tratamiento.paciente_nombre }} {{ tratamiento.paciente_apellido }}</td>
+                        <td>{{ tratamiento.medico_nombre }} {{ tratamiento.medico_apellido }}</td>
+                        <td>{{ tratamiento.tratamiento_nombre }}</td>
+                        <td>{{ tratamiento.descripcion }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Formulario de inserción de Tratamientos -->
+        <div class="col-md-5 formulario-container ms-md-5">
+            <h3 class="text-center">Insertar Tratamiento</h3>
+            <form method="post" id="tratamientosForm" action="{% url 'insertar_tratamiento' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="tratamiento_nombre">Tratamiento:</label>
+                        <input type="text" class="form-control" id="tratamiento_nombre" name="tratamiento_nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion"></textarea>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="paciente_email">Correo del Paciente:</label>
+                        <input type="email" class="form-control" id="paciente_email" name="paciente_email" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="medico_id">Médico:</label>
+                        <select class="form-select" id="medico_id" name="medico_id" required>
+                            {% for medico in medicos %}
+                            <option value="{{ medico.id_medicos }}">{{ medico.nombre }} {{ medico.apellido }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-secondary" type="submit">Insertar Tratamiento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function buscarTratamiento(event) {
+        event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+        const campo = document.getElementById("campo_busqueda").value; // Obtiene el valor seleccionado en el combo box
+        const valor = document.getElementById("valor_busqueda").value; // Obtiene el valor ingresado en el input de búsqueda
+
+        // Redirige a la URL correspondiente según el campo seleccionado
+        if (campo === "paciente_nombre") {
+            window.location.href = "/tratamientos_busqueda_paciente/" + valor;
+        } else {
+            window.location.href = "/tratamientos_busqueda_medico/" + valor;
+        }
+    }
+</script>
+{% endblock %}

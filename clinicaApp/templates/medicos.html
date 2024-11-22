@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% load static %}
+{% block subtitulo %}Doctores{% endblock %}
+
+<style>
+    .parqueos-container {
+        text-align: center;
+    }
+    .formulario-container {
+        margin-left: 30%;
+        width: 50%;
+    }
+</style>
+
+{% block contenido %}
+
+<div class="row g-0 text-center m-4">
+    <div class="col-sm-4 col-sm-7 me-5">
+        <div class="container mt-5">
+            <div class="p-3 parqueos-container">
+                <div id="date" style="font-size: 50px;"></div>
+                <div id="clock" style="font-size: 50px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="container mt-5">
+            <div class="container mt-5 parqueos-container">
+                <div class="p-2">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-8 text-center d-flex align-items-center justify-content-center">
+                            <h1 class="mb-0">Doctores Registrados</h1>
+                            <div class="spinner-border text-secondary ms-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <div style="display: inline-block; text-align: center; margin: 0 5px; font-size: 35px;">
+                            <h4>Conteo de Médicos:</h4>
+                            <span id="contador-medicos">{{ conteo_medicos }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tabla de Médicos -->
+        <div class="col-md-5 formulario-tabla">
+            <h3 class="text-center">Médicos</h3>
+            <form class="d-flex mb-4" onsubmit="buscarMedico(event)">
+                <select class="form-select me-2" id="campo_medico">
+                    <option value="nombre" selected>Nombre</option>
+                    <option value="apellido">Apellido</option>
+                    <option value="especialidad">Especialidad</option>
+                    <option value="telefono">Teléfono</option>
+                    <option value="email">Correo</option>
+                </select>
+                <input class="form-control me-2" id="valor_medico" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-secondary me-2" type="submit">Buscar</button>
+                <!-- Botón para mostrar todos los registros -->
+                <a class="btn btn-primary" href="{% url 'medicos' %}">Mostrar Todos</a>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Especialidad</th>
+                        <th>Teléfono</th>
+                        <th>Correo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for medico in medicos %}
+                    <tr>
+                        <td>{{ medico.id_medicos }}</td>
+                        <td>{{ medico.nombre }}</td>
+                        <td>{{ medico.apellido }}</td>
+                        <td>{{ medico.especialidad }}</td>
+                        <td>{{ medico.telefono }}</td>
+                        <td>{{ medico.email }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Formulario de inserción de Médicos -->
+        <div class="col-md-5 formulario-container ms-md-5">
+            <h3 class="text-center">Insertar Médico</h3>
+            <form method="post" id="medicosForm" action="{% url 'medicosinsert' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="especialidad">Especialidad:</label>
+                        <input type="text" class="form-control" id="especialidad" name="especialidad" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email">Correo:</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-secondary" type="submit">Insertar Médico</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function buscarMedico(event) {
+        event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+        const campo = document.getElementById("campo_medico").value; // Obtiene el valor seleccionado en el combo box
+        const nombre = document.getElementById("valor_medico").value; // Obtiene el valor ingresado en el input de búsqueda
+
+        // Valida el campo seleccionado y redirige con el campo y valor adecuados
+        if (campo === "nombre") {
+            window.location.href = `/medicosbusqueda/${nombre}`;
+        } else if (campo === "apellido") {
+            window.location.href = `/medicosbusqueda1/${nombre}`;
+        } else if (campo === "especialidad") {
+            window.location.href = `/medicosbusqueda2/${nombre}`;
+        } else if (campo === "telefono") {
+            window.location.href = `/medicosbusqueda3/${nombre}`;
+        } else if (campo === "email") {
+            window.location.href = `/medicosbusqueda4/${nombre}`;
+        } else {
+            alert("Seleccione un campo válido para buscar.");
+        }
+    }
+</script>
+
+
+{% endblock %}

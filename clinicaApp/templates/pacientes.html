@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+{% block subtitulo %}Pacientes{% endblock %}
+<style>
+    .parqueos-container {
+        text-align: center;
+    }
+    .formulario-container {
+        margin-left: 30%;
+        width: 50%;
+    }
+</style>
+{% block contenido %}
+
+<div class="row g-0 text-center m-4">
+    <div class="col-sm-4 col-sm-7 me-5">
+        <div class="container mt-5">
+            <div class="p-3 parqueos-container">
+                <div id="date" style="font-size: 50px;"></div>
+                <div id="clock" style="font-size: 50px;"></div>                            
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="container mt-5">
+            <div class="container mt-5 parqueos-container">
+                <div class="p-2">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-8 text-center d-flex align-items-center justify-content-center">
+                            <h1 class="mb-0">Pacientes Registrados</h1>
+                            <div class="spinner-border text-secondary ms-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3" style="position: relative; top: 20%; right: 5%; left: 1%;">
+                        <div style="display: inline-block; text-align: center; margin: 0 5px; font-size: 35px;">
+                            <h4></h4>
+                            <span id="contador-pacientes" class="parqueos-counter">{{ conteo_citas }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Columna de la tabla de pacientes con margen reducido -->
+        <div class="col-md-5 formulario-tabla">
+            <h3 class="text-center">Pacientes</h3>
+            <form class="d-flex mb-4" onsubmit="buscarPaciente(event)">
+                <select class="form-select me-2" id="campo">
+                    <option value="nombre" selected>Nombre</option>
+                    <option value="apellido">Apellido</option>
+                    <option value="telefono">Teléfono</option>
+                    <option value="correo">Correo</option>
+                </select>
+                <input class="form-control me-2" id="valor" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-secondary me-2" type="submit">Buscar</button>
+                <!-- Botón para mostrar todos los registros -->
+                <a class="btn btn-primary" href="{% url 'pacientes' %}">Mostrar Todos</a>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Teléfono</th>
+                        <th>Dirección de correo</th>
+                        <th>Fecha de Nacimiento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for paciente in pacientes %}
+                    <tr>
+                        <td>{{ paciente.id_pacientes }}</td>
+                        <td>{{ paciente.nombre }}</td>
+                        <td>{{ paciente.apellido }}</td>
+                        <td>{{ paciente.telefono }}</td>
+                        <td>{{ paciente.email }}</td>
+                        <td>{{ paciente.fecha_nacimiento }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Columna del formulario de inserción con un margen a la izquierda para separarla -->
+        <div class="col-md-5 formulario-container ms-md-5">
+            <h3 class="text-center">Insertar Paciente</h3>
+            <form method="post" id="myForm" action="{% url 'pacientesinsert' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="apellido">Apellido:</label>
+                        <input type="text" class="form-control" id="apellido" name="apellido" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="correo">Correo:</label>
+                        <input type="text" class="form-control" id="correo" name="correo" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" required>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-secondary" type="submit">Insertar Paciente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    function buscarPaciente(event) {
+        event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+        const campo = document.getElementById("campo").value; // Obtiene el valor seleccionado en el combo box
+        const nombre = document.getElementById("valor").value; // Obtiene el valor ingresado en el input de búsqueda
+
+        // Valida el campo seleccionado y redirige con el campo y valor adecuados
+        if (campo === "nombre") {
+            window.location.href = `/pacientebusqueda/${nombre}`;
+        } else if (campo === "apellido") {
+            window.location.href = `/pacientebusqueda1/${nombre}`;
+        } else if (campo === "telefono") {
+            window.location.href = `/pacientebusqueda2/${nombre}`;
+        } else if (campo === "correo") {
+            window.location.href = `/pacientebusqueda3/${nombre}`;
+        } else {
+            alert("Seleccione un campo válido para buscar.");
+        }
+    }
+</script>
+
+{% endblock %}
+

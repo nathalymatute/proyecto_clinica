@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% load static %}
+{% block subtitulo %}Citas{% endblock %}
+
+<style>
+    .citas-container {
+        text-align: center;
+    }
+    .formulario-container {
+        margin-left: 30%;
+        width: 50%;
+    }
+</style>
+
+{% block contenido %}
+
+<div class="row g-0 text-center m-4">
+    <div class="col-sm-4 col-sm-7 me-5">
+        <div class="container mt-5">
+            <div class="p-3 citas-container">
+                <div id="date" style="font-size: 50px;"></div>
+                <div id="clock" style="font-size: 50px;"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4">
+        <div class="container mt-5">
+            <div class="container mt-5 citas-container">
+                <div class="p-2">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="col-8 text-center d-flex align-items-center justify-content-center">
+                            <h1 class="mb-0">Citas Registradas</h1>
+                            <div class="spinner-border text-secondary ms-2" role="status" style="width: 1.5rem; height: 1.5rem;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <div style="display: inline-block; text-align: center; margin: 0 5px; font-size: 35px;">
+                            <h4>Conteo de Citas:</h4>
+                            <span id="contador-citas">{{ conteo_citas }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row">
+        <!-- Tabla de Citas -->
+        <div class="col-md-5 formulario-tabla">
+            <h3 class="text-center">Citas del Día</h3>
+            <form class="d-flex mb-4" onsubmit="buscarCita(event)">
+                <select class="form-select me-2" id="campo_busqueda">
+                    <option value="paciente_nombre" selected>Nombre del Paciente</option>
+                    <option value="paciente_apellido">Apellido del Paciente</option>
+                    <option value="nombre_medico">Nombre medico</option>
+                    <option value="apellido_medico">Apellido medico</option>
+                </select>
+                <input class="form-control me-2" id="valor_busqueda" type="search" placeholder="Buscar" aria-label="Search">
+                <button class="btn btn-secondary me-2" type="submit">Buscar</button>
+                <!-- Botón para mostrar todos los registros -->
+                <a class="btn btn-primary" href="{% url 'citas' %}">Mostrar Todos</a>
+            </form>
+
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Paciente</th>
+                        <th>Médico</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cita in citas %}
+                    <tr>
+                        <td>{{ cita.id_cita }}</td>
+                        <td>{{ cita.paciente_nombre }} {{ cita.paciente_apellido }}</td>
+                        <td>{{ cita.medico_nombre }} {{ cita.medico_apellido }}</td>
+                        <td>{{ cita.fecha }}</td>
+                        <td>{{ cita.hora }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Formulario de inserción de Citas -->
+        <div class="col-md-5 formulario-container ms-md-5">
+            <h3 class="text-center">Insertar Cita</h3>
+            <form method="post" id="citasForm" action="{% url 'citasinsert' %}">
+                {% csrf_token %}
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="hora">Hora:</label>
+                        <input type="time" class="form-control" id="hora" name="hora" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="paciente_email">Correo del Paciente:</label>
+                        <input type="email" class="form-control" id="paciente_email" name="paciente_email" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="medico_id">Médico:</label>
+                        <select class="form-select" id="medico_id" name="medico_id" required>
+                            {% for medico in medicos %}
+                            <option value="{{ medico.id_medicos }}">{{ medico.nombre }} {{ medico.apellido }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button class="btn btn-secondary" type="submit">Insertar Cita</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function buscarCita(event) {
+        event.preventDefault(); // Evita que el formulario se envíe de forma tradicional
+
+        const campo = document.getElementById("campo_busqueda").value; // Obtiene el valor seleccionado en el combo box
+        const valor = document.getElementById("valor_busqueda").value; // Obtiene el valor ingresado en el input de búsqueda
+
+        // Valida el campo seleccionado y redirige con el campo y valor adecuados
+        if (campo === "paciente_nombre") {
+            window.location.href = `/citasbusqueda_nombre/${valor}`;
+        } else if (campo === "paciente_apellido") {
+            window.location.href = `/citasbusqueda_apellido/${valor}`;
+        } else if (campo === "nombre_medico") {
+            window.location.href = `/citasbusqueda_nombre1/${valor}`;
+           
+        }else if(campo === "apellido_medico"){
+            window.location.href = `/citasbusqueda_apellido2/${valor}`;
+        }
+    }
+</script>
+
+{% endblock %}
